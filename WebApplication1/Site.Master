@@ -1,0 +1,125 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="WebApplication1.SiteMaster" %>
+
+<!DOCTYPE html>
+<html lang="en">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%: Page.Title %> - Pet Supplies Store</title>
+
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <form runat="server">
+        <asp:ScriptManager runat="server" EnablePartialRendering="true" />
+
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand" href="/">
+                    <i class="fas fa-paw me-2"></i>Pet Supplies Store
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-sm-0">
+                        <!-- Dashboard Link (role-based) -->
+                        <li class="nav-item" runat="server" id="liDashboard" visible="false">
+                            <a class="nav-link" runat="server" id="aDashboard" href="#">Dashboard</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="/">
+                                <i class="fas fa-home me-1"></i>Home
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Shop.aspx">
+                                <i class="fas fa-shopping-bag me-1"></i>Shop
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/About.aspx">
+                                <i class="fas fa-info-circle me-1"></i>About
+                            </a>
+                        </li>
+                    </ul>
+
+                    <asp:LoginView runat="server" ViewStateMode="Disabled">
+                        <AnonymousTemplate>
+                            <ul class="navbar-nav ms-auto">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/Account/Register">
+                                        <i class="fas fa-user-plus me-1"></i>Register
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/Account/Login">
+                                        <i class="fas fa-sign-in-alt me-1"></i>Log in
+                                    </a>
+                                </li>
+                            </ul>
+                        </AnonymousTemplate>
+                        <RoleGroups>
+                            <%-- 1. CUSTOMER VIEW (Shows Cart) --%>
+                            <asp:RoleGroup Roles="Customer">
+                                <ContentTemplate>
+                                    <ul class="navbar-nav ms-auto align-items-center">
+                                        <li class="nav-item me-2">
+                                            <a class="nav-link text-warning text-white-50" href='<%= ResolveUrl("~/Cart.aspx") %>'>
+                                                <i class="fas fa-shopping-cart me-1"></i>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item text-white-50 me-2">
+                                            <i class="fas fa-user me-1"></i>Hello, <%: Context.User.Identity.GetUserName() %>!
+                                        </li>
+                                        <li class="nav-item">
+                                            <asp:LoginStatus runat="server" CssClass="nav-link" LogoutAction="Redirect" LogoutText="Log off" LogoutPageUrl="~/" OnLoggingOut="Unnamed_LoggingOut" />
+                                        </li>
+                                    </ul>
+                                </ContentTemplate>
+                            </asp:RoleGroup>
+                        </RoleGroups>
+                        <LoggedInTemplate>
+                            <%-- 2. DEFAULT VIEW (Admins/Sellers - No Cart) --%>
+                            <ul class="navbar-nav ms-auto align-items-center">
+                                <li class="nav-item text-white me-2">
+                                    <i class="fas fa-user me-1"></i>Hello, <%: Context.User.Identity.GetUserName() %>!
+                                </li>
+                                <li class="nav-item">
+                                    <asp:LoginStatus runat="server" CssClass="nav-link" LogoutAction="Redirect" LogoutText="Log off" LogoutPageUrl="~/" OnLoggingOut="Unnamed_LoggingOut" />
+                                </li>
+                            </ul>
+                        </LoggedInTemplate>
+                    </asp:LoginView>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main content -->
+        <div class="container body-content mt-4">
+            <asp:ContentPlaceHolder ID="MainContent" runat="server">
+            </asp:ContentPlaceHolder>
+            <hr />
+            <footer class="text-center py-3">
+                <div class="row">
+                    <div class="col-md-12">
+                        <p class="mb-1">&copy; <%: DateTime.Now.Year %> - Pet Supply Store</p>
+                        <p class="text-muted small">Your trusted partner for all pet supply needs</p>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </form>
+
+    <!-- Scripts -->
+    <script src='<%= ResolveUrl("~/Scripts/jquery-3.6.0.min.js") %>'></script>
+    <script src='<%= ResolveUrl("~/Scripts/bootstrap.bundle.min.js") %>'></script>
+</body>
+</html>
